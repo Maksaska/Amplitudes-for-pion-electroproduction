@@ -1,0 +1,5 @@
+#!/bin/sh  
+g++ -o Amplitudes Amplitudes.cpp `root-config --cflags --libs` -O3;
+./Amplitudes
+
+
