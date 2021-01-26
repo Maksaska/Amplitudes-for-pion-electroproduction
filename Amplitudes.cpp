@@ -83,10 +83,10 @@ double Fpi_f(const double& Q2)
 vector<complex<double>> U_functions_n(const double& W, const double& Q2, const double& theta)
 {
 	vector<complex<double>> V2;
-	double Re, Im, F1n, F1p, F2n, F2p, Fpi, s, t, u, kq;
-	complex<double> Value, U7_1, U8_1, U5_1, U7_2, U8_2, U5_2, U7, U8;
+	double Re, Im, F1n, F1p, F2n, F2p, Fpi, s, t, u, kq, qp, nu;
+	complex<double> Value, U6_1, U8_1, U5_1, U6_2, U8_2, U5_2, U6, U8;
 	
-	double E1, E2, k0, q0, x;	x = sqrt(double(2)/double(137));
+	double E1, E2, k0, q0, x;	x = 13.5*sqrt(double(2)/double(137));
 	
 	E1 = (W*W + Mp*Mp + Q2)/(2*W);
 	E2 = (W*W + Mn*Mn - Mpip*Mpip)/(2*W);
@@ -100,20 +100,21 @@ vector<complex<double>> U_functions_n(const double& W, const double& Q2, const d
 	t = Mpip*Mpip - Q2 - 2*kq;
 	u = Mp*Mp + Mn*Mn - Q2 + Mpip*Mpip - s - t;
 	
-	Re = -x*F1n/(u - Mp*Mp) + x*F1p/(s - Mp*Mp); 
+	nu = (W*W + Q2 - Mp*Mp)/(2*Mp);
+	
+	qp = 2*nu*Mp - Q2 - kq;
+	
+	Re = -x*F1n/(u - Mp*Mp) + x*F1p/(s - Mp*Mp); //U1
 	Im = -x*F2n/(u - Mp*Mp) - x*F2p/(s - Mp*Mp);	
 	Value = complex<double>(Re,Im);
 	V2.push_back(Value);
 	
-	Value = complex<double>(0,0);
+	Value = complex<double>(0,0); //U2
 	V2.push_back(Value);
 	
-	Re = x*Fpi*(-1/Q2 - 1/(t - Mpip*Mpip)) - x*F1n/Q2 + x*F1p/Q2;
+	Re = x*Fpi*(-1/Q2 - 1/(t - Mpip*Mpip)) - x*F1n/Q2 + x*F1p/Q2; //U4
 	Im = x*F2n/(u - Mp*Mp) + x*F2p/(s - Mp*Mp);
 	Value = complex<double>(Re,Im);
-	V2.push_back(Value);
-	
-	Value = complex<double>(0,0);
 	V2.push_back(Value);
 	
 	Re = x*2*Mp*F1p/(s - Mp*Mp);
@@ -122,9 +123,9 @@ vector<complex<double>> U_functions_n(const double& W, const double& Q2, const d
 	
 	Re = 0;
 	Im = x*F2p/(2*Mp*(s - Mp*Mp));
-	U8_1 = complex<double>(Re,Im);
+	U8_1 = complex<double>(Re,Im); 
 	
-	U7_1 = -(U5_1 - Q2*U8_1)/kq;
+	U6_1 = -(U5_1 - Q2*U8_1)/qp;
 	
 	Re = -x*2*Mp*F1n/(u - Mp*Mp);
 	Im = x*Q2*F2n/((u - Mp*Mp)*2*Mp);
@@ -134,12 +135,16 @@ vector<complex<double>> U_functions_n(const double& W, const double& Q2, const d
 	Im = x*F2n/(2*Mp*(u - Mp*Mp));
 	U8_2 = complex<double>(Re,Im);
 	
-	U7_2 = -(U5_2 - Q2*U8_2)/kq;
+	U6_2 = -(U5_2 - Q2*U8_2)/qp;
 	
-	U7 = U7_1 + U7_2;
+	U6 = U6_1 + U6_2;
 	U8 = U8_1 + U8_2;
 	
-	V2.push_back(U7);
+	V2.push_back(U6);
+	
+	Value = complex<double>(0,0); //U7
+	V2.push_back(Value);
+	
 	V2.push_back(U8); 
 	
 	return V2;
@@ -148,15 +153,17 @@ vector<complex<double>> U_functions_n(const double& W, const double& Q2, const d
 vector<complex<double>> U_functions_p(const double& W, const double& Q2, const double& theta)
 {
 	vector<complex<double>> V2;
-	double Re, Im, F1n, F1p, F2n, F2p, Fpi, s, t, u, kq;
-	complex<double> Value, U7_1, U8_1, U5_1, U7_2, U8_2, U5_2, U7, U8;
+	double Re, Im, F1n, F1p, F2n, F2p, Fpi, s, t, u, kq, qp, nu;
+	complex<double> Value, U6_1, U8_1, U5_1, U6_2, U8_2, U5_2, U6, U8;
 	
-	double E1, E2, k0, q0, x;	x = sqrt(double(1)/double(137));
+	double E1, E2, k0, q0, x;	x = 13.5*sqrt(double(1)/double(137));
 	
 	E1 = (W*W + Mp*Mp + Q2)/(2*W);
 	E2 = (W*W + Mp*Mp - Mpiz*Mpiz)/(2*W);
 	k0 = W - E2;
 	q0 = W - E1;	
+	
+	nu = (W*W + Q2 - Mp*Mp)/(2*Mp);
 	
 	F1n = F1n_f(Q2); F1p = F1p_f(Q2); F2n = F2n_f(Q2); F2p = F2p_f(Q2); //Fpi = Fpi_f(Q2);
 	
@@ -165,20 +172,19 @@ vector<complex<double>> U_functions_p(const double& W, const double& Q2, const d
 	t = Mpiz*Mpiz - Q2 - 2*kq;
 	u = Mp*Mp + Mn*Mn - Q2 + Mpiz*Mpiz - s - t;
 	
-	Re = -x*F1p/(u - Mp*Mp) + x*F1p/(s - Mp*Mp);
+	qp = 2*nu*Mp - Q2 - kq;
+	
+	Re = -x*F1p/(u - Mp*Mp) + x*F1p/(s - Mp*Mp); //U1
 	Im = -x*F2p/(u - Mp*Mp) - x*F2p/(s - Mp*Mp);	
 	Value = complex<double>(Re,Im);
 	V2.push_back(Value);
 	
-	Value = complex<double>(0,0);
+	Value = complex<double>(0,0); //U2
 	V2.push_back(Value);
 	
 	Re = - x*F1p/Q2 + x*F1p/Q2;
-	Im = x*F2p/(u - Mp*Mp) + x*F2p/(s - Mp*Mp);
+	Im = x*F2p/(u - Mp*Mp) + x*F2p/(s - Mp*Mp); //U4
 	Value = complex<double>(Re,Im);
-	V2.push_back(Value);
-	
-	Value = complex<double>(0,0);
 	V2.push_back(Value);
 	
 	Re = x*2*Mp*F1p/(s - Mp*Mp);
@@ -189,7 +195,7 @@ vector<complex<double>> U_functions_p(const double& W, const double& Q2, const d
 	Im = x*F2p/(2*Mp*(s - Mp*Mp));
 	U8_1 = complex<double>(Re,Im);
 	
-	U7_1 = -(U5_1 - Q2*U8_1)/kq;
+	U6_1 = -(U5_1 - Q2*U8_1)/qp;
 	
 	Re = -x*2*Mp*F1p/(u - Mp*Mp);
 	Im = x*Q2*F2p/((u - Mp*Mp)*2*Mp);
@@ -199,12 +205,16 @@ vector<complex<double>> U_functions_p(const double& W, const double& Q2, const d
 	Im = x*F2p/(2*Mp*(u - Mp*Mp));
 	U8_2 = complex<double>(Re,Im);
 	
-	U7_2 = -(U5_2 - Q2*U8_2)/kq;
+	U6_2 = -(U5_2 - Q2*U8_2)/qp;
 	
-	U7 = U7_1 + U7_2;
+	U6 = U6_1 + U6_2;
 	U8 = U8_1 + U8_2;
 	
-	V2.push_back(U7);
+	V2.push_back(U6);
+	
+	Value = complex<double>(0,0); //U7
+	V2.push_back(Value);
+	
 	V2.push_back(U8);			
 	
 	return V2;
@@ -216,24 +226,24 @@ vector<complex<double>> A_functions_n(const double& W, const double& Q2, const d
 	
 	complex<double> A;
 	
-	double E1, E2, k0, q0;
+	double E1, E2, k0, q0, kq;
 	
 	E1 = (W*W + Mp*Mp + Q2)/(2*W);
 	E2 = (W*W + Mn*Mn - Mpip*Mpip)/(2*W);
 	k0 = W - E2;
-	q0 = W - E1;	
+	q0 = W - E1;	kq = k0*q0 - sqrt(k0*k0 - Mpip*Mpip)*sqrt(q0*q0 + Q2)*cos(theta);
 	
 	U = U_functions_n(W, Q2, theta);
 	
 	A = U[0] - 2*Mp*U[3];
 	V1.push_back(A);
-	A = U[1]/(k0*q0 - sqrt(k0*k0 - Mpip*Mpip)*sqrt(q0*q0 + Q2)*cos(theta));
+	A = 0; 
 	V1.push_back(A);
 	A = -U[4];
 	V1.push_back(A);
 	A = -U[3];
 	V1.push_back(A);
-	A = (U[0] + U[2])/(k0*q0 - sqrt(k0*k0 - Mpip*Mpip)*sqrt(q0*q0 + Q2)*cos(theta));
+	A = 0;
 	V1.push_back(A);
 	A = U[5];
 	V1.push_back(A); 
@@ -247,24 +257,24 @@ vector<complex<double>> A_functions_p(const double& W, const double& Q2, const d
 	
 	complex<double> A;
 	
-	double E1, E2, k0, q0;
+	double E1, E2, k0, q0, kq;
 	
 	E1 = (W*W + Mp*Mp + Q2)/(2*W);
 	E2 = (W*W + Mp*Mp - Mpiz*Mpiz)/(2*W);
 	k0 = W - E2;
-	q0 = W - E1;	
+	q0 = W - E1;	kq = k0*q0 - sqrt(k0*k0 - Mpiz*Mpiz)*sqrt(q0*q0 + Q2)*cos(theta);
 	
 	U = U_functions_p(W, Q2, theta);
 	
 	A = U[0] - 2*Mp*U[3];
 	V1.push_back(A);
-	A = U[1]/(k0*q0 - sqrt(k0*k0 - Mpiz*Mpiz)*sqrt(q0*q0 + Q2)*cos(theta));
+	A = 0;
 	V1.push_back(A);
-	A = -U[4];
+	A = -U[4]; //
 	V1.push_back(A);
-	A = -U[3];
+	A = -U[3]; //
 	V1.push_back(A);
-	A = (U[0] + U[2])/(k0*q0 - sqrt(k0*k0 - Mpiz*Mpiz)*sqrt(q0*q0 + Q2)*cos(theta));
+	A = 0;
 	V1.push_back(A);
 	A = U[5];
 	V1.push_back(A); 
@@ -464,14 +474,16 @@ int main(int argc, char **argv) // W, Q2, cos(theta) generation
 	eps = 1/(1 + 2*(nu*nu + Q2)/(4*(E0 - nu)*E0 - Q2));
 	Gamma_flux = W*(W*W - Mp*Mp)/(137*4*M_PI*Mp*Mp*E0*E0*(1 - eps)*Q2);
 	
-	S_t = 2*Mp*(abs(Amp2[1])*abs(Amp2[1]) + abs(Amp2[2])*abs(Amp2[2]))/(1.232*0.116);
-	S_l = 4*Mp*(abs(Amp2[0])*abs(Amp2[0]))/(1.232*0.116);
+	S_t = 19.732688*19.732688*2*Mp*(abs(Amp2[1])*abs(Amp2[1]) + abs(Amp2[2])*abs(Amp2[2]))/(1.232*0.116);
+	S_l = 19.732688*19.732688*4*Mp*(abs(Amp2[0])*abs(Amp2[0]))/(1.232*0.116);
 	S = Gamma_flux*(S_t + eps*S_l);
 	
 	cout << "\n\nDelta(1232)/Check (mubn/sr)\n" << endl;
 	
-	cout << "S_t = " << 4*M_PI*S_t << endl;
-	cout << "S_l = " << 4*M_PI*S_l << endl;
+	cout << "S_t_p = " << 8*M_PI*S_t/5 << endl;
+	cout << "S_l_p = " << 8*M_PI*S_l/5 << endl;
+	cout << "S_t_n = " << 12*M_PI*S_t/5 << endl;
+	cout << "S_l_n = " << 12*M_PI*S_l/5 << endl;
 	
 	S1 = Sections_from_CGLN_n(Amp1, W, Q2, phi, theta, E0);
 	S2 = Sections_from_CGLN_p(Amp3, W, Q2, phi, theta, E0);
